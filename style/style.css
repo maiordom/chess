@@ -1,32 +1,23 @@
-* {margin: 0; padding: 0;}
+*          {margin: 0; padding: 0;}
 BODY, HTML {height: 100%; width: 100%;}
-BODY {font-family: serif;}
+BODY       {background: #eee; font: 30px Geneva, Verdana, Sans-Serif; color: #888;}
 
-.desk__container {float: left;}
+.desk__container        {padding-top: 50px;}
+.desk                   {margin: 0 auto; text-align: center; font-size: 40px;}
+.desk td                {width: 64px; height: 64px; border: none;}
+.desk td span           {cursor: pointer;}
 
-.desk    {float: left; margin: 50px; text-align: center; font-size: 30px;}
-.desk td {width: 60px; height: 60px; border: 1px solid black;}
+.desk .coord-char       {font-size: 25px;}
+.desk .coord-num        {font-size: 25px;}
+.desk .cell-white       {background: #FFCE9E;}
+.desk .cell-black       {background: #D18B47;}
+.desk .piece-white      {color: white;}
+.desk .piece-black      {color: black;}
 
-.desk td span {cursor: pointer;}
+.desk .cell-white:hover {}
+.desk .cell-black:hover {}
 
-.desk tr:nth-child(odd)  td:nth-child(even) {background: #FFCE9E;}
-.desk tr:nth-child(odd)  td:nth-child(odd)  {background: #D18B47;}
+.desk .available-cell   {background: red !important;}
+.ui-draggable-disabled  {opacity: .5; filter: Alpha(Opacity=50); cursor: default !important;}
 
-.desk tr:nth-child(even) td:nth-child(odd)  {background: #FFCE9E;}
-.desk tr:nth-child(even) td:nth-child(even) {background: #D18B47;}
-
-.desk tr:last-child td {border: none;}
-.desk td:first-child   {border: none;}
-.desk .border-none     {border: none;}
-
-.desk td:first-child,
-.desk tr:last-child td {background: none !important;}
-
-.desk .white-cell     {background: #FFCE9E;}
-.desk .black-cell     {background: #D18B47;}
-
-.desk .white          {color: white;}
-.desk .black          {color: black;}
-.desk .available-cell {background: red !important;}
-
-.desk .ui-draggable-disabled {opacity: .5; filter: Alpha(Opacity=50); cursor: default !important;}
+/*#F0D9B5 #B58863*/

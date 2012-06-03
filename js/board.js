@@ -80,7 +80,7 @@ App.Board.prototype =
             c[7][i].piece = new App.Piece( a.pieces[i], a.pnames[i], a.colors[1], c[7][i].cell );
         }
 
-        this.ifIE();
+        this.setCellsColor();
     },
 
     setCellsAsAvailable: function(data)
@@ -178,7 +178,7 @@ App.Board.prototype =
             tr = $("<tr>").append("<td>" + ( 8 - i ) + "</td> ").appendTo( board );
 
             for (j = 0; j < 8; j++)
-                $("<td class='cell'></td>").appendTo( tr );
+                $("<td class='cell'>").appendTo( tr );
         }
 
         tr = $("<tr>").append("<td>").appendTo( board );
@@ -190,15 +190,12 @@ App.Board.prototype =
         this.container = container.appendTo( "body" );
     },
 
-    ifIE: function()
+    setCellsColor: function()
     {
-        if ($.browser.msie)
-        {
-            this.table.find("tr:even .cell:even, tr:odd .cell:odd").addClass("white-cell");
-            this.table.find("tr:even .cell:odd,  tr:odd .cell:even").addClass("black-cell");
-            this.table.find("tr:last td").addClass("border-none");
-            this.table.find("td:first").addClass("border-none");
-        }
+        this.table.find("tr:even .cell:even, tr:odd .cell:odd").addClass("cell-white");
+        this.table.find("tr:even .cell:odd,  tr:odd .cell:even").addClass("cell-black");
+        this.table.find("tr:last td").addClass("coord-char");
+        this.table.find("tr td:nth-child(9n+1)").addClass("coord-num");
     },
 
     setPieces: function()
