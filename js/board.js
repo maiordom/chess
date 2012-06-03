@@ -1,5 +1,6 @@
 App.Board = function()
 {
+    this.cell_active   = null;
     this.king_danger   = false;
     this.cells         = [];
     this.table         = null;
@@ -87,7 +88,7 @@ App.Board.prototype =
     {
         for (var i = data.length; i--;)
         {
-            this.getCell( data[i].x, data[i].y ).cell.addClass("available-cell");
+            this.getCell( data[i].x, data[i].y ).cell.droppable( "enable" );
         }
     },
 
@@ -95,7 +96,7 @@ App.Board.prototype =
     {
         for (var i = data.length; i--;)
         {
-            this.getCell( data[i].x, data[i].y ).cell.removeClass("available-cell");
+            this.getCell( data[i].x, data[i].y ).cell.droppable( "disable" );
         }
     },
 
@@ -127,24 +128,21 @@ App.Board.prototype =
     {
         this.cells[i][j].cell.droppable(
         {
+            hoverClass: "cell-available",
+
             drop: function(e, ui)
             {
                 var cell = $(e.target);
 
-                if (cell.hasClass("available-cell"))
-                {
-                    Self.player = Self.queue_players[ Self.player ];
+                Self.player = Self.queue_players[ Self.player ];
 
-                    table.trigger( $.Event("onDrop", {drop: cell, drag: ui.helper}) );
+                table.trigger( $.Event("onDrop", {drop: cell, drag: ui.helper}) );
 
-                    Self.reversePlayer( Self.player );
-                }
-                else
-                {
-                    ui.helper.animate({top: 0, left: 0}, 500);
-                }
+                Self.reversePlayer( Self.player );
             }
         });
+
+        this.cells[i][j].cell.droppable( "disable" );
     },
 
     _setDrag: function(i, j, table, Self)
@@ -156,11 +154,13 @@ App.Board.prototype =
 
             start: function(e, ui)
             {
+                Self.cell_active = ui.helper.parent().addClass("cell-nonebck");
                 table.trigger( $.Event("onDragStart", {obj: ui.helper}) );
             },
 
             stop: function(e, ui)
             {
+                Self.cell_active.removeClass("cell-nonebck");
                 table.trigger( $.Event("onDragStop", {e: e, ui: ui}) );
             }
         });
@@ -168,23 +168,19 @@ App.Board.prototype =
 
     drawBoard: function()
     {
-        var board, container, tr, i, j;
+        var board, container, back, tr, i, j;
 
         container = $("<div>").addClass("desk__container");
-        board     = $("<table>").addClass("desk");
+        board     = $("<div>").addClass("desk");
+        back      = $("<div>").addClass("cell-background");
 
         for (i = 0; i < 8; i++)
         {
-            tr = $("<tr>").append("<td>" + ( 8 - i ) + "</td> ").appendTo( board );
+            tr = $("<div>").appendTo( board ).addClass("row");
 
             for (j = 0; j < 8; j++)
-                $("<td class='cell'>").appendTo( tr );
+                $("<div class='cell'>").append( back.clone() ).appendTo( tr );
         }
-
-        tr = $("<tr>").append("<td>").appendTo( board );
-
-        for (i = 0; i < 8; i++)
-            tr.append("<td>" + this.letters[i] + "</td>");
 
         this.table     = board.appendTo( container );
         this.container = container.appendTo( "body" );
@@ -192,15 +188,13 @@ App.Board.prototype =
 
     setCellsColor: function()
     {
-        this.table.find("tr:even .cell:even, tr:odd .cell:odd").addClass("cell-white");
-        this.table.find("tr:even .cell:odd,  tr:odd .cell:even").addClass("cell-black");
-        this.table.find("tr:last td").addClass("coord-char");
-        this.table.find("tr td:nth-child(9n+1)").addClass("coord-num");
+        this.table.find(".row:even .cell:even, .row:odd .cell:odd").addClass("cell-white");
+        this.table.find(".row:even .cell:odd,  .row:odd .cell:even").addClass("cell-black");
     },
 
     setPieces: function()
     {
-        var tr = this.table.find("tr"), td, i, j;
+        var tr = this.table.find(".row"), td, i, j;
 
         for (i = 8; i--;)
         {
@@ -208,12 +202,12 @@ App.Board.prototype =
 
             for (j = 0; j < 8; j++)
             {
-                td = tr.eq(i).find("td");
-                td.eq(j + 1).attr("data-coords", j + "-" + (7 - i));
+                td = tr.eq(i).find(".cell");
+                td.eq(j).attr("data-coords", j + "-" + (7 - i));
 
                 this.cells[i][j] =
                 {
-                    cell:  td.eq(j + 1),
+                    cell:  td.eq(j),
                     piece: null
                 };
             }

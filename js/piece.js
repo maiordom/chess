@@ -18,7 +18,7 @@ App.Piece.prototype =
         var obj = $("<span>" + this.type + "</span>");
 
         obj.attr("data-type", this.name);
-        obj.addClass( "piece-" + this.color );
+        obj.addClass( "piece piece-" + this.color );
 
         cell.append( obj );
 

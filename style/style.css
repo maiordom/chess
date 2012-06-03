@@ -3,21 +3,28 @@ BODY, HTML {height: 100%; width: 100%;}
 BODY       {background: #eee; font: 30px Geneva, Verdana, Sans-Serif; color: #888;}
 
 .desk__container        {padding-top: 50px;}
-.desk                   {margin: 0 auto; text-align: center; font-size: 40px;}
-.desk td                {width: 64px; height: 64px; border: none;}
-.desk td span           {cursor: pointer;}
+.desk                   {position: relative; margin: 0 auto; width: 512px; height: 512px; text-align: center; font-size: 40px;}
+.desk .cell             {float: left; position: relative; width: 64px; height: 64px;}
+.desk .cell span        {cursor: move; top: 3px;}
+.desk .cell-background  {position: absolute; z-index: 0; width: 64px; height: 64px; top: 0; left: 0;}
+.desk .row              {height: 64px;}
 
 .desk .coord-char       {font-size: 25px;}
 .desk .coord-num        {font-size: 25px;}
-.desk .cell-white       {background: #FFCE9E;}
-.desk .cell-black       {background: #D18B47;}
-.desk .piece-white      {color: white;}
-.desk .piece-black      {color: black;}
+.desk .cell-white       {background: #F0D9B5;}
+.desk .cell-black       {background: #B58863;}
+.desk .piece-white      {color: white; position: relative; z-index: 1;}
+.desk .piece-black      {color: black; position: relative; z-index: 1;}
 
 .desk .cell-white:hover {}
 .desk .cell-black:hover {}
 
-.desk .available-cell   {background: red !important;}
-.ui-draggable-disabled  {opacity: .5; filter: Alpha(Opacity=50); cursor: default !important;}
+.desk .cell-nonebck   .cell-background {background: none !important;}
+.desk .cell:hover     .cell-background {background: url(../images/hover.png) 0   0;}
+.desk .cell-available .cell-background {background: url(../images/hover.png) 0 -64px;}
+.desk .cell-selected  .cell-background {background: url(../images/hover.png) 0 -64px;}
+
+.ui-draggable-disabled  {cursor: default !important;}
 
 /*#F0D9B5 #B58863*/
+/*#FFCE9E #D18B47*/

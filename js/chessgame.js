@@ -49,7 +49,8 @@ App.Game = function()
                     alert( Self.messages[ TBoard.queue_players[ TBoard.player ] ][ TRules.isEnd( TBoard.player ) ] );
                 }
 
-                e.drop.empty().append( e.drag.css({top: "", left: ""}) );
+                e.drop.find(".piece").remove();
+                e.drop.append( e.drag.css({top: "", left: ""}) );
             });
         },
 
