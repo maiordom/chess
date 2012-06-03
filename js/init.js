@@ -2,11 +2,13 @@ $(document).ready(function()
 {
     var
         board = new App.Board(),
-        rules = App.Rules( board.cells );
+        path  = App.Path( board.cells ),
+        rules = App.Rules( board, path );
 
     App.Instances =
     {
         board: board,
+        path:  path,
         rules: rules
     };
 
