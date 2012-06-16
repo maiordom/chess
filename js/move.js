@@ -1,13 +1,13 @@
-$.extend(App.Board.prototype,
+$.extend( App.Board.prototype,
 {
     disableSelectedCell: function()
     {
-        if (this.cell_active)
+        if ( this.cell_active )
         {
-            this.cell_active.removeClass("cell-nonebck").removeClass("cell-selected");
+            this.cell_active.removeClass( "cell-nonebck" ).removeClass( "cell-selected" );
             this.cell_active = null;
 
-            this.table.trigger( $.Event("onDragStop") );
+            this.table.trigger( $.Event( "onDragStop" ) );
 
             return true;
         }
@@ -15,11 +15,18 @@ $.extend(App.Board.prototype,
         return false;
     },
 
-    dropSelectedPiece: function(cell)
+    dropSelectedPiece: function( cell )
     {
         this.player = this.queue_players[ this.player ];
 
-        this.table.trigger( $.Event("onDrop", {drop: cell, drag: this.cell_active.find(".piece")}) );
+        this.table.trigger
+        (
+            $.Event( "onDrop",
+            {
+                drop: cell,
+                drag: this.cell_active.find( ".piece" )
+            })
+        );
 
         this.disableSelectedCell();
         this.reversePlayer( this.player );
@@ -29,22 +36,22 @@ $.extend(App.Board.prototype,
     {
         var Self = this, table = this.table, piece, cell;
 
-        table.delegate(".piece", "click", function(e)
+        table.delegate( ".piece", "click", function( e )
         {
-            piece = $(this);
+            piece = $( this );
             cell  = piece.parent();
 
-            if (cell.hasClass("cell-selectable"))
+            if ( cell.hasClass( "cell-selectable" ) )
             {
                 Self.dropSelectedPiece( cell );
                 return false;
             }
 
-            if (piece.hasClass("ui-draggable-disabled"))
+            if ( piece.hasClass( "ui-draggable-disabled" ) )
             {
                 return false;
             }
-            else if (cell.hasClass("cell-selected"))
+            else if ( cell.hasClass( "cell-selected" ) )
             {
                 Self.disableSelectedCell();
                 return false;
@@ -52,11 +59,11 @@ $.extend(App.Board.prototype,
 
             Self.disableSelectedCell();
 
-            Self.cell_active = piece.parent().addClass("cell-selected");
+            Self.cell_active = piece.parent().addClass( "cell-selected" );
 
             table.trigger
             (
-                $.Event("onDragStart", { obj: piece } )
+                $.Event( "onDragStart", { obj: piece } )
             );
         });
     },
@@ -65,9 +72,9 @@ $.extend(App.Board.prototype,
     {
         var Self = this, table = this.table;
 
-        table.delegate(".cell-selectable", "click", function()
+        table.delegate( ".cell-selectable", "click", function()
         {
-            Self.dropSelectedPiece( $(this) );
+            Self.dropSelectedPiece( $( this ) );
         });
     },
 
@@ -75,33 +82,33 @@ $.extend(App.Board.prototype,
     {
         var table = this.table, Self = this, cell;
 
-        for (var i = 0; i < 8; i++)
-            for (var j = 0; j < 8; j++)
-            {
-                this._setDrop( i, j, table, Self );
+        for ( var i = 0; i < 8; i++ )
+        for ( var j = 0; j < 8; j++ )
+        {
+            this._setDrop( i, j, table, Self );
 
-                if (this.cells[i][j].piece === null) {continue;}
+            if ( this.cells[ i ][ j ].piece === null ) { continue; }
 
-                this._setDrag( i, j, table, Self );
-            }
+            this._setDrag( i, j, table, Self );
+        }
     },
 
-    _setDrag: function(i, j, table, Self)
+    _setDrag: function( i, j, table, Self )
     {
-        this.cells[i][j].piece.obj.draggable(
+        this.cells[ i ][ j ].piece.obj.draggable(
         {
             revert: "invalid",
             containment: this.table,
 
-            start: function(e, ui)
+            start: function( e, ui )
             {
                 Self.disableSelectedCell();
 
-                Self.cell_active = ui.helper.parent().addClass("cell-nonebck").removeClass("cell-selected");
+                Self.cell_active = ui.helper.parent().addClass( "cell-nonebck" ).removeClass( "cell-selected" );
 
                 table.trigger
                 (
-                    $.Event("onDragStart", { obj: ui.helper } )
+                    $.Event( "onDragStart", { obj: ui.helper } )
                 );
             },
 
@@ -112,22 +119,22 @@ $.extend(App.Board.prototype,
         });
     },
 
-    _setDrop: function(i, j, table, Self)
+    _setDrop: function( i, j, table, Self )
     {
-        this.cells[i][j].cell.droppable(
+        this.cells[ i ][ j ].cell.droppable(
         {
             hoverClass: "cell-available",
 
-            drop: function(e, ui)
+            drop: function( e, ui )
             {
                 Self.player = Self.queue_players[ Self.player ];
 
-                table.trigger( $.Event("onDrop", {drop: $(e.target), drag: ui.helper}) );
+                table.trigger( $.Event( "onDrop", { drop: $( e.target ), drag: ui.helper } ) );
 
                 Self.reversePlayer( Self.player );
             }
         });
 
-        this.cells[i][j].cell.droppable( "disable" );
+        this.cells[ i ][ j ].cell.droppable( "disable" );
     }
 });

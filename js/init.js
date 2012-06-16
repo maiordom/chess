@@ -1,4 +1,4 @@
-$(document).ready(function()
+$( document ).ready( function()
 {
     var
         board = new App.Board(),
@@ -13,4 +13,4 @@ $(document).ready(function()
     };
 
     App.Game();
-});
+} );
