@@ -26,7 +26,7 @@ App.Game = function()
 
         onDragStop: function()
         {
-            TBoard.table.bind("onDragStop", function(e)
+            TBoard.table.bind("onDragStop", function()
             {
                 TBoard.setCellsAsDefault( Self.curr_path );
             });
@@ -42,6 +42,7 @@ App.Game = function()
                     coords = from.concat( to );
 
                 TBoard.moveCell.apply( TBoard, coords );
+                TBoard.setMovedPath.apply( TBoard, coords );
                 TRules.pawnChecking( coords[2], coords[3] );
 
                 if (TRules.isKingDanger( TBoard.player ))

@@ -3,6 +3,7 @@ App.Board = function()
     this.cell_active   = null;
     this.king_danger   = false;
     this.cells         = [];
+    this.moved_path    = null;
     this.table         = null;
     this.container     = null;
     this.colors        = ["white", "black"];
@@ -22,7 +23,11 @@ App.Board.prototype =
         this.drawBoard();
         this.setPieces();
         this.drawPieces();
-        this.setDragAndDrop();
+
+        this.setOnDragAndDrop();
+        this.setOnDropSelectedPiece();
+        this.setOnSelectPiece();
+
         this.reversePlayer( "white" );
     },
 
@@ -50,6 +55,24 @@ App.Board.prototype =
                 this.getCell(i, j).piece.obj.draggable("disable") :
                 this.getCell(i, j).piece.obj.draggable("enable");
         }
+    },
+
+    setMovedPath: function(from_x, from_y, to_x, to_y)
+    {
+        if (this.moved_path)
+        {
+            this.removeMovedPath.apply( this, this.moved_path );
+        }
+
+        this.moved_path = arguments;
+        this.cells[to_y][to_x].cell.addClass("cell-moved");
+        this.cells[from_y][from_x].cell.addClass("cell-moved");
+    },
+
+    removeMovedPath: function(from_x, from_y, to_x, to_y)
+    {
+        this.cells[to_y][to_x].cell.removeClass("cell-moved");
+        this.cells[from_y][from_x].cell.removeClass("cell-moved");
     },
 
     getCell: function(x, y)
@@ -89,6 +112,7 @@ App.Board.prototype =
         for (var i = data.length; i--;)
         {
             this.getCell( data[i].x, data[i].y ).cell.droppable( "enable" );
+            this.getCell( data[i].x, data[i].y ).cell.addClass( "cell-selectable" );
         }
     },
 
@@ -97,6 +121,7 @@ App.Board.prototype =
         for (var i = data.length; i--;)
         {
             this.getCell( data[i].x, data[i].y ).cell.droppable( "disable" );
+            this.getCell( data[i].x, data[i].y ).cell.removeClass( "cell-selectable" );
         }
     },
 
@@ -107,63 +132,6 @@ App.Board.prototype =
         var coords = cell.data("coords").match(/\d+/g);
 
         return [ parseInt( coords[0] ), parseInt( coords[1] ) ];
-    },
-
-    setDragAndDrop: function()
-    {
-        var table = this.table, Self = this, cell;
-
-        for (var i = 0; i < 8; i++)
-        for (var j = 0; j < 8; j++)
-        {
-            this._setDrop( i, j, table, Self );
-
-            if (this.cells[i][j].piece === null) {continue;}
-
-            this._setDrag( i, j, table, Self );
-        }
-    },
-
-    _setDrop: function(i, j, table, Self)
-    {
-        this.cells[i][j].cell.droppable(
-        {
-            hoverClass: "cell-available",
-
-            drop: function(e, ui)
-            {
-                var cell = $(e.target);
-
-                Self.player = Self.queue_players[ Self.player ];
-
-                table.trigger( $.Event("onDrop", {drop: cell, drag: ui.helper}) );
-
-                Self.reversePlayer( Self.player );
-            }
-        });
-
-        this.cells[i][j].cell.droppable( "disable" );
-    },
-
-    _setDrag: function(i, j, table, Self)
-    {
-        this.cells[i][j].piece.obj.draggable(
-        {
-            revert: "invalid",
-            containment: this.table,
-
-            start: function(e, ui)
-            {
-                Self.cell_active = ui.helper.parent().addClass("cell-nonebck");
-                table.trigger( $.Event("onDragStart", {obj: ui.helper}) );
-            },
-
-            stop: function(e, ui)
-            {
-                Self.cell_active.removeClass("cell-nonebck");
-                table.trigger( $.Event("onDragStop", {e: e, ui: ui}) );
-            }
-        });
     },
 
     drawBoard: function()

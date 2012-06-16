@@ -3,9 +3,9 @@ BODY, HTML {height: 100%; width: 100%;}
 BODY       {background: #eee; font: 30px Geneva, Verdana, Sans-Serif; color: #888;}
 
 .desk__container        {padding-top: 50px;}
-.desk                   {position: relative; margin: 0 auto; width: 512px; height: 512px; text-align: center; font-size: 40px;}
+.desk                   {position: relative; margin: 0 auto; width: 512px; height: 512px; text-align: center; font-size: 40px; box-shadow: 0 0 7px #BBB;}
 .desk .cell             {float: left; position: relative; width: 64px; height: 64px;}
-.desk .cell span        {cursor: move; top: 3px;}
+.desk .piece            {width: 64px; height: 61px; padding-top: 3px; display: inline-block;}
 .desk .cell-background  {position: absolute; z-index: 0; width: 64px; height: 64px; top: 0; left: 0;}
 .desk .row              {height: 64px;}
 
@@ -19,12 +19,20 @@ BODY       {background: #eee; font: 30px Geneva, Verdana, Sans-Serif; color: #88
 .desk .cell-white:hover {}
 .desk .cell-black:hover {}
 
-.desk .cell-nonebck   .cell-background {background: none !important;}
-.desk .cell:hover     .cell-background {background: url(../images/hover.png) 0   0;}
-.desk .cell-available .cell-background {background: url(../images/hover.png) 0 -64px;}
-.desk .cell-selected  .cell-background {background: url(../images/hover.png) 0 -64px;}
+.desk .cell-nonebck          .cell-background {background: none !important;}
+.desk .cell:hover            .cell-background {background: url(../images/hover.png) 0 0;}
 
-.ui-draggable-disabled  {cursor: default !important;}
+.desk .cell-available        .cell-background,
+.desk .cell-selected         .cell-background,
+.desk .cell-selectable:hover .cell-background {background: url(../images/hover.png) 0 -64px !important;}
+.desk .cell-moved            .cell-background {background: url(../images/hover.png) 0 -192px;}
+
+.desk .ui-draggable                     {cursor: move;}
+.desk .ui-draggable-disabled.piece      {cursor: default;}
+.desk .cell-selectable .piece           {cursor: pointer}
+.desk .cell-selected   .piece           {cursor: move;}
+.desk .cell-available  .piece           {}
+.desk .cell-selectable .cell-background {cursor: pointer;}
 
 /*#F0D9B5 #B58863*/
 /*#FFCE9E #D18B47*/
