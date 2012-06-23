@@ -50,7 +50,7 @@ App.Game = function()
                     alert( Self.messages[ TBoard.queue_players[ TBoard.player ] ][ TRules.isEnd( TBoard.player ) ] );
                 }
 
-                e.drop.find( ".piece" ).remove();
+                TBoard.movePieceToTomb( e.drop.find( ".piece" ) );
                 e.drop.append( e.drag.css( { top: "", left: "" } ) );
             });
         },

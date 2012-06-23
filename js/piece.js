@@ -1,11 +1,10 @@
-App.Piece = function( type, name, color, cell )
+App.Piece = function( name, color, cell )
 {
-    this.type  = type;
     this.name  = name;
     this.color = color;
     this.obj   = null;
 
-    if ( type && name && color )
+    if ( name && color )
     {
         this.draw( cell );
     }
@@ -15,10 +14,10 @@ App.Piece.prototype =
 {
     draw: function( cell )
     {
-        var obj = $( "<span>" + this.type + "</span>" );
+        var obj = $( "<span>" );
 
         obj.attr( "data-type", this.name );
-        obj.addClass( "piece piece-" + this.color );
+        obj.addClass( "piece piece-" + this.color + " piece__" + this.name );
 
         cell.append( obj );
 

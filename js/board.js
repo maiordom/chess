@@ -1,17 +1,50 @@
 App.Board = function()
 {
-    this.cell_active   = null;
-    this.king_danger   = false;
-    this.cells         = [];
-    this.moved_path    = null;
-    this.table         = null;
-    this.container     = null;
-    this.colors        = [ "white", "black" ];
-    this.letters       = [ "A", "B", "C", "D", "E", "F", "G", "H" ];
-    this.pieces        = [ "♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜", "♟" ];
-    this.pnames        = [ "rook", "knight" , "bishop", "queen", "king", "bishop", "knight", "rook", "pawn" ];
-    this.player        = "white";
-    this.queue_players = { white: "black", black: "white" };
+    this.cell_active = null;
+    this.moved_path  = null;
+    this.table       = null;
+    this.container   = null;
+    this.king_danger = false;
+    this.cells       = [];
+    this.letters     = [ "A", "B", "C", "D", "E", "F", "G", "H" ];
+    this.pnames      = [ "rook", "knight" , "bishop", "queen", "king", "bishop", "knight", "rook", "pawn" ];
+    this.colors      = [ "white", "black" ];
+
+    this.player = "black";
+
+    this.queue_players =
+    {
+        white: "black",
+        black: "white"
+    };
+
+    this.tomb =
+    {
+        white:  null,
+        black:  null,
+        white_coords:
+        {
+            count:    0,
+            left:     512,
+            top:      0,
+            offset_x: 0,
+            offset_y: 0
+        },
+        black_coords:
+        {
+            count:    0,
+            left:     512,
+            top:      448,
+            offset_x: 0,
+            offset_y: 0
+        }
+    };
+
+    this.current_player =
+    {
+        white: $( ".b-player__current .piece-white.piece__king" ),
+        black: $( ".b-player__current .piece-black.piece__king" )
+    };
 
     this.init();
 };
@@ -21,8 +54,10 @@ App.Board.prototype =
     init: function()
     {
         this.drawBoard();
+        this.drawCoords();
         this.setPieces();
         this.drawPieces();
+        this.appendRightColumn();
 
         this.setOnDragAndDrop();
         this.setOnDropSelectedPiece();
@@ -38,20 +73,25 @@ App.Board.prototype =
         cell.piece =
         {
             color: this.queue_players[ this.player ],
-            type:  this.pieces[ 3 ],
-            obj:   cell.piece.obj.text( this.pieces[ 3 ] ).attr( "data-type", "queen" ),
+            obj:   cell.piece.obj.addClass( "piece__queen" ).attr( "data-type", "queen" ),
             name:  "queen"
         };
     },
 
-    reversePlayer: function( player )
+    reversePlayer: function()
     {
+        this.current_player[ this.player ].hide();
+
+        this.player = this.queue_players[ this.player ];
+
+        this.current_player[ this.player ].show();
+
         for ( var i = 0; i < 8; i++ )
         for ( var j = 0; j < 8; j++ )
         {
             if ( !this.getCell( i, j ).piece ) { continue; }
 
-            this.getCell( i, j ).piece.color !== player ?
+            this.getCell( i, j ).piece.color !== this.player ?
                 this.getCell( i, j ).piece.obj.draggable( "disable" ) :
                 this.getCell( i, j ).piece.obj.draggable( "enable" );
         }
@@ -97,11 +137,11 @@ App.Board.prototype =
 
         for ( var i = 0; i < 8; i++ )
         {
-            c[ 1 ][ i ].piece = new App.Piece( a.pieces[ 8 ], a.pnames[ 8 ], a.colors[ 0 ], c[ 1 ][ i ].cell );
-            c[ 0 ][ i ].piece = new App.Piece( a.pieces[ i ], a.pnames[ i ], a.colors[ 0 ], c[ 0 ][ i ].cell );
+            c[ 1 ][ i ].piece = new App.Piece( a.pnames[ 8 ], a.colors[ 0 ], c[ 1 ][ i ].cell );
+            c[ 0 ][ i ].piece = new App.Piece( a.pnames[ i ], a.colors[ 0 ], c[ 0 ][ i ].cell );
 
-            c[ 6 ][ i ].piece = new App.Piece( a.pieces[ 8 ], a.pnames[ 8 ], a.colors[ 1 ], c[ 6 ][ i ].cell );
-            c[ 7 ][ i ].piece = new App.Piece( a.pieces[ i ], a.pnames[ i ], a.colors[ 1 ], c[ 7 ][ i ].cell );
+            c[ 6 ][ i ].piece = new App.Piece( a.pnames[ 8 ], a.colors[ 1 ], c[ 6 ][ i ].cell );
+            c[ 7 ][ i ].piece = new App.Piece( a.pnames[ i ], a.colors[ 1 ], c[ 7 ][ i ].cell );
         }
 
         this.setCellsColor();
@@ -136,8 +176,9 @@ App.Board.prototype =
 
     drawBoard: function()
     {
-        var board, container, back, tr, i, j;
+        var board, container, wrapper, back, tr, i, j;
 
+        wrapper   = $( "<div>" ).addClass( "desk__wrapper" );
         container = $( "<div>" ).addClass( "desk__container" );
         board     = $( "<div>" ).addClass( "desk" );
         back      = $( "<div>" ).addClass( "cell-background" );
@@ -150,8 +191,37 @@ App.Board.prototype =
                 $( "<div class='cell'>" ).append( back.clone() ).appendTo( tr );
         }
 
-        this.table     = board.appendTo( container );
+        this.table     = board.appendTo( wrapper );
+        this.wrapper   = wrapper.appendTo( container );
         this.container = container.appendTo( "body" );
+    },
+
+    drawCoords: function()
+    {
+        var
+            lrow  = $( "<div>" ).addClass( "row_letters" ),
+            nrow  = $( "<div>" ).addClass( "row_numbers" ),
+            lcell = $( "<div>" ).addClass( "cell-letter" ),
+            ncell = $( "<div>" ).addClass( "cell-number" );
+
+        for ( var i = 0, len = this.letters.length; i < len; i++)
+        {
+            lrow.append( lcell.clone().text( this.letters[ i ] ) );
+            nrow.append( ncell.clone().text( len - i ) );
+        }
+
+        lrow.appendTo( this.table );
+        nrow.appendTo( this.table );
+    },
+
+    appendRightColumn: function()
+    {
+        var column = $( ".b-column_right" );
+
+        this.tomb.white = column.find( ".b-tomb-white" );
+        this.tomb.black = column.find( ".b-tomb-black" );
+
+        this.wrapper.append( column );
     },
 
     setCellsColor: function()

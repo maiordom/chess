@@ -1,38 +1,70 @@
 *          {margin: 0; padding: 0;}
 BODY, HTML {height: 100%; width: 100%;}
-BODY       {background: #eee; font: 30px Geneva, Verdana, Sans-Serif; color: #888;}
+BODY       {background: #ececec; font: 30px Geneva, Verdana, Sans-Serif; min-width: 960px;}
 
-.desk__container        {padding-top: 50px;}
-.desk                   {position: relative; margin: 0 auto; width: 512px; height: 512px; text-align: center; font-size: 40px; box-shadow: 0 0 7px #BBB;}
-.desk .cell             {float: left; position: relative; width: 64px; height: 64px;}
-.desk .piece            {width: 64px; height: 61px; padding-top: 3px; display: inline-block;}
-.desk .cell-background  {position: absolute; z-index: 0; width: 64px; height: 64px; top: 0; left: 0;}
-.desk .row              {height: 64px;}
+/* --- Доска ---
+---------------- */
+.desk__container {padding-top: 50px; margin: 0 auto; width: 800px; height: 512px;}
+.desk__wrapper   {position: relative; float: left; height: 100%;}
+.desk            {position: relative; float: left; text-align: center; font-size: 40px; box-shadow: 0 0 7px #BBB;}
 
-.desk .coord-char       {font-size: 25px;}
-.desk .coord-num        {font-size: 25px;}
-.desk .cell-white       {background: #F0D9B5;}
-.desk .cell-black       {background: #B58863;}
-.desk .piece-white      {color: white; position: relative; z-index: 1;}
-.desk .piece-black      {color: black; position: relative; z-index: 1;}
+/* --- Строка доски ---
+----------------------- */
+.row_letters {position: absolute; height: 32px; font-size: 15px; color: #888;}
+.row_numbers {position: absolute; right: -30px; top: 0; height: 100%; width: 32px; font-size: 15px; color: #888;}
+.row         {height: 64px;}
 
-.desk .cell-white:hover {}
-.desk .cell-black:hover {}
+/* --- Ячейка доски ---
+----------------------- */
+.cell             {float: left; position: relative; width: 64px; height: 64px;}
+.cell-background  {position: absolute; z-index: 0; width: 64px; height: 64px; top: 0; left: 0;}
+.cell-white       {background: #F0D9B5;}
+.cell-black       {background: #B58863;}
+.cell-letter      {float: left; width: 64px; margin-top: 6px;}
+.cell-number      {height: 64px; line-height: 64px;}
 
-.desk .cell-nonebck          .cell-background {background: none !important;}
-.desk .cell:hover            .cell-background {background: url(../images/hover.png) 0 0;}
+/* --- Типы Фигур ---
+--------------------- */
+.piece-die                 {opacity: 0.5;}
+.piece-white               {position: relative; z-index: 1;}
+.piece-black               {position: relative; z-index: 1;}
+.piece                     {background: url(../images/sprite.png) no-repeat; width: 64px; height: 64px; display: block;}
+.piece-white.piece__pawn   {background-position: 0      0;}
+.piece-white.piece__bishop {background-position: -64px  0;}
+.piece-white.piece__knight {background-position: -128px 0;}
+.piece-white.piece__rook   {background-position: -192px 0;}
+.piece-white.piece__queen  {background-position: -256px 0;}
+.piece-white.piece__king   {background-position: -320px 0;}
 
-.desk .cell-available        .cell-background,
-.desk .cell-selected         .cell-background,
-.desk .cell-selectable:hover .cell-background {background: url(../images/hover.png) 0 -64px !important;}
-.desk .cell-moved            .cell-background {background: url(../images/hover.png) 0 -192px;}
+.piece-black.piece__pawn   {background-position: 0      -64px;}
+.piece-black.piece__bishop {background-position: -64px  -64px;}
+.piece-black.piece__knight {background-position: -128px -64px;}
+.piece-black.piece__rook   {background-position: -192px -64px;}
+.piece-black.piece__queen  {background-position: -256px -64px;}
+.piece-black.piece__king   {background-position: -320px -64px;}
 
-.desk .ui-draggable                     {cursor: move;}
-.desk .ui-draggable-disabled.piece      {cursor: default;}
-.desk .cell-selectable .piece           {cursor: pointer}
-.desk .cell-selected   .piece           {cursor: move;}
-.desk .cell-available  .piece           {}
-.desk .cell-selectable .cell-background {cursor: pointer;}
+/* --- Правая колонка ---
+------------------------- */
+.b-column_right    {position: relative; float: left; margin-left: 32px; width: 256px; height: 100%;}
+.b-player__current {position: absolute; top: 50%; margin-top: -32px; width: 64px; height: 64px; overflow: hidden;}
+.b-tomb-white      {position: absolute; top: 0;    width: 100%; height: 64px;}
+.b-tomb-black      {position: absolute; bottom: 0; width: 100%; height: 64px;}
 
-/*#F0D9B5 #B58863*/
-/*#FFCE9E #D18B47*/
+/* --- Состояние ячейки ---
+--------------------------- */
+.cell-nonebck          .cell-background {background: none !important;}
+.cell:hover            .cell-background {background: url(../images/hover.png) 0 0;}
+
+.cell-available        .cell-background,
+.cell-selected         .cell-background,
+.cell-selectable:hover .cell-background {background: url(../images/hover.png) 0 -64px !important;}
+.cell-moved            .cell-background {background: url(../images/hover.png) 0 -192px;}
+
+/* --- Состояния курсора ---
+---------------------------- */
+.ui-draggable                     {cursor: move;}
+.ui-draggable-disabled.piece      {cursor: default;}
+.cell-selectable .piece           {cursor: pointer}
+.cell-selected   .piece           {cursor: move;}
+.cell-available  .piece           {}
+.cell-selectable .cell-background {cursor: pointer;}

@@ -1,5 +1,57 @@
 $.extend( App.Board.prototype,
 {
+    getTomb: function( piece )
+    {
+        var a = {}, res = {};
+
+        if ( piece.attr( "class" ).search( "piece-white" ) !== -1 )
+        {
+            a.tomb   = this.tomb.white;
+            a.coords = this.tomb.white_coords;
+        }
+        else
+        {
+            a.tomb   = this.tomb.black;
+            a.coords = this.tomb.black_coords;
+        }
+
+        a.coords.offset_x += 32;
+        a.coords.left     += 32;
+        a.coords.count++;
+
+        if ( a.coords.count === 9 )
+        {
+            a.coords.left      = 544;
+            a.coords.offset_x  = 32;
+            a.coords.top      += 32;
+            a.coords.offset_y += 32;
+        }
+
+        var coords = piece.parent().position();
+
+        coords.position = "absolute";
+
+        piece.css( coords ).appendTo( this.table );
+
+        return a;
+    },
+
+    movePieceToTomb: function( piece )
+    {
+        if ( !piece.length ) { return false; }
+
+        var obj = this.getTomb( piece );
+
+        piece.animate( obj.coords, 500, function()
+        {
+            piece
+                .removeClass( "ui-draggable" )
+                .addClass( "piece-die" )
+                .css( { top: obj.coords.offset_y, left: obj.coords.offset_x - 32 } )
+                .appendTo( obj.tomb );
+        });
+    },
+
     disableSelectedCell: function()
     {
         if ( this.cell_active )
@@ -17,7 +69,7 @@ $.extend( App.Board.prototype,
 
     dropSelectedPiece: function( cell )
     {
-        this.player = this.queue_players[ this.player ];
+        this.reversePlayer();
 
         this.table.trigger
         (
@@ -29,7 +81,6 @@ $.extend( App.Board.prototype,
         );
 
         this.disableSelectedCell();
-        this.reversePlayer( this.player );
     },
 
     setOnSelectPiece: function()
@@ -127,11 +178,9 @@ $.extend( App.Board.prototype,
 
             drop: function( e, ui )
             {
-                Self.player = Self.queue_players[ Self.player ];
+                Self.reversePlayer();
 
                 table.trigger( $.Event( "onDrop", { drop: $( e.target ), drag: ui.helper } ) );
-
-                Self.reversePlayer( Self.player );
             }
         });
 
