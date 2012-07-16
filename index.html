@@ -1,11 +1,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
 <head>
+
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <title>Chess</title>
+
+    <link rel="stylesheet" type="text/css" href="style/css3.css"  />
+    <link rel="stylesheet" type="text/css" href="style/style.css" />
+
+    <!--[if IE 8]>
+        <link rel="stylesheet" type="text/css" href="style/ie8.css" />
+    <![endif]-->
+
+    <!--[if IE 7]>
+        <link rel="stylesheet" type="text/css" href="style/ie7.css" />
+    <![endif]-->
+
 </head>
+
 <body>
 
 <script type="text/javascript">
@@ -20,8 +35,29 @@
 <script type="text/javascript" src="js/rules.js"></script>
 <script type="text/javascript" src="js/move.js"></script>
 <script type="text/javascript" src="js/chessgame.js"></script>
+<script type="text/javascript" src="js/start.js"></script>
 <script type="text/javascript" src="js/test.js"></script>
 <script type="text/javascript" src="js/init.js"></script>
+
+<div class="desk__container">
+
+    <div class="desk__wrapper">
+
+        <div class="b-area">
+
+            <ul>
+                <li><a class="btn b-btn__demo                btn_def-style btn_def-bck" href="#">Демо механики игры</a></li>
+                <li><a class="btn b-btn__friend btn_disabled btn_def-style btn_def-bck" href="#">Сыграть с другом</a></li>
+                <li><a class="btn b-btn__ai     btn_disabled btn_def-style btn_def-bck" href="#">Партия с компьютером</a></li>
+            </ul>
+
+        </div>
+
+        <div class="desk"></div>
+
+    </div>
+
+</div>
 
 <div class="b-column_right">
 
@@ -37,4 +73,5 @@
 </div>
 
 </body>
+
 </html>

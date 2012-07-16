@@ -1,71 +1,72 @@
-*          {margin: 0; padding: 0;}
-BODY, HTML {height: 100%; width: 100%;}
-BODY       {background: #ececec; font: 30px Geneva, Verdana, Sans-Serif; min-width: 960px;}
+*          { margin: 0; padding: 0; }
+BODY, HTML { height: 100%; width: 100%; }
+BODY       { background: #ececec; font: 30px Geneva, Verdana, Sans-Serif; min-width: 960px; }
+UL         { list-style: none; }
 
 /* --- Доска ---
 ---------------- */
-.desk__container {padding-top: 50px; margin: 0 auto; width: 800px; height: 512px;}
-.desk__wrapper   {position: relative; float: left; height: 100%;}
-.desk            {position: relative; float: left; text-align: center; font-size: 40px; box-shadow: 0 0 7px #BBB;}
+.desk__container { padding-top: 50px; margin: 0 auto; width: 800px; height: 512px; }
+.desk__wrapper   { position: relative; float: left; height: 100%; }
+.desk            { position: relative; float: left; text-align: center; font-size: 40px; box-shadow: 0 0 7px #BBB; }
 
 /* --- Строка доски ---
 ----------------------- */
-.row_letters {position: absolute; height: 32px; font-size: 15px; color: #888;}
-.row_numbers {position: absolute; right: -30px; top: 0; height: 100%; width: 32px; font-size: 15px; color: #888;}
-.row         {height: 64px;}
+.row_letters { position: absolute; height: 32px; font-size: 15px; color: #888; }
+.row_numbers { position: absolute; right: -30px; top: 0; height: 100%; width: 32px; font-size: 15px; color: #888; }
+.row         { height: 64px; }
 
 /* --- Ячейка доски ---
 ----------------------- */
-.cell             {float: left; position: relative; width: 64px; height: 64px;}
-.cell-background  {position: absolute; z-index: 0; width: 64px; height: 64px; top: 0; left: 0;}
-.cell-white       {background: #F0D9B5;}
-.cell-black       {background: #B58863;}
-.cell-letter      {float: left; width: 64px; margin-top: 6px;}
-.cell-number      {height: 64px; line-height: 64px;}
+.cell             { float: left; position: relative; width: 64px; height: 64px; }
+.cell-background  { position: absolute; z-index: 0; width: 64px; height: 64px; top: 0; left: 0; }
+.cell-white       { background: #F0D9B5; }
+.cell-black       { background: #B58863; }
+.cell-letter      { float: left; width: 64px; margin-top: 6px; }
+.cell-number      { height: 64px; line-height: 64px; }
 
 /* --- Типы Фигур ---
 --------------------- */
-.piece-die                 {opacity: 0.5; filter: progid: DXImageTransform.Microsoft.Alpha(opacity=50);}
-.piece-white               {position: relative; z-index: 1;}
-.piece-black               {position: relative; z-index: 1;}
-.piece                     {background: url(../images/sprite.png) no-repeat; width: 64px; height: 64px; display: block;}
-.piece-white.piece__pawn   {background-position: 0      0;}
-.piece-white.piece__bishop {background-position: -64px  0;}
-.piece-white.piece__knight {background-position: -128px 0;}
-.piece-white.piece__rook   {background-position: -192px 0;}
-.piece-white.piece__queen  {background-position: -256px 0;}
-.piece-white.piece__king   {background-position: -320px 0;}
+.piece-die                 { opacity: 0.5; filter: progid: DXImageTransform.Microsoft.Alpha(opacity=50); }
+.piece-white               { position: relative; z-index: 1; }
+.piece-black               { position: relative; z-index: 1; }
+.piece                     { background: url(../images/sprite.png) no-repeat; width: 64px; height: 64px; display: block; }
+.piece-white.piece__pawn   { background-position: 0      0; }
+.piece-white.piece__bishop { background-position: -64px  0; }
+.piece-white.piece__knight { background-position: -128px 0; }
+.piece-white.piece__rook   { background-position: -192px 0; }
+.piece-white.piece__queen  { background-position: -256px 0; }
+.piece-white.piece__king   { background-position: -320px 0; }
 
-.piece-black.piece__pawn   {background-position: 0      -64px;}
-.piece-black.piece__bishop {background-position: -64px  -64px;}
-.piece-black.piece__knight {background-position: -128px -64px;}
-.piece-black.piece__rook   {background-position: -192px -64px;}
-.piece-black.piece__queen  {background-position: -256px -64px;}
-.piece-black.piece__king   {background-position: -320px -64px;}
+.piece-black.piece__pawn   { background-position: 0      -64px; }
+.piece-black.piece__bishop { background-position: -64px  -64px; }
+.piece-black.piece__knight { background-position: -128px -64px; }
+.piece-black.piece__rook   { background-position: -192px -64px; }
+.piece-black.piece__queen  { background-position: -256px -64px; }
+.piece-black.piece__king   { background-position: -320px -64px; }
 
 /* --- Правая колонка ---
 ------------------------- */
-.b-column_right    {position: relative; float: left; margin-left: 32px; width: 256px; height: 512px;}
-.b-player__current {position: absolute; top: 50%; margin-top: -32px; width: 64px; height: 64px; overflow: hidden;}
-.b-tomb-white      {position: absolute; top: 0;    width: 100%; height: 64px;}
-.b-tomb-black      {position: absolute; bottom: 0; width: 100%; height: 64px;}
+.b-column_right    { position: relative; float: left; margin-left: 32px; width: 256px; height: 512px; display: none; }
+.b-player__current { position: absolute; top: 50%; margin-top: -32px; width: 64px; height: 64px; overflow: hidden; }
+.b-tomb-white      { position: absolute; top: 0;    width: 100%; height: 64px; }
+.b-tomb-black      { position: absolute; bottom: 0; width: 100%; height: 64px; }
 
 /* --- Состояние ячейки ---
 --------------------------- */
-.cell-nonebck          .cell-background {background: none !important;}
-.cell:hover            .cell-background {background: url(../images/hover.png) 0 0;}
+.cell-nonebck          .cell-background { background: none !important; }
+.cell:hover            .cell-background { background: url(../images/hover.png) 0 0; }
 
 .cell-available        .cell-background,
 .cell-selected         .cell-background,
-.cell-selectable:hover .cell-background {background: url(../images/hover.png) 0 -64px !important;}
-.cell-moved            .cell-background {background: url(../images/hover.png) 0 -192px;}
+.cell-selectable:hover .cell-background { background: url(../images/hover.png) 0 -64px !important; }
+.cell-moved            .cell-background { background: url(../images/hover.png) 0 -192px; }
 
 /* --- Состояния курсора ---
 ---------------------------- */
-.ui-draggable-dragging            {position: absolute;}
-.ui-draggable                     {cursor: move;}
-.ui-draggable-disabled.piece      {cursor: default;}
-.cell-selectable .piece           {cursor: pointer}
-.cell-selected   .piece           {cursor: move;}
+.ui-draggable-dragging            { position: absolute; }
+.ui-draggable                     { cursor: move; }
+.ui-draggable-disabled.piece      { cursor: default; }
+.cell-selectable .piece           { cursor: pointer; }
+.cell-selected   .piece           { cursor: move; }
 .cell-available  .piece           {}
-.cell-selectable .cell-background {cursor: pointer;}
+.cell-selectable .cell-background { cursor: pointer; }

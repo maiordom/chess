@@ -4,6 +4,7 @@ App.Game = function()
         TPath  = App.Instances.path,
         TBoard = App.Instances.board,
         TRules = App.Instances.rules,
+        TStart = App.Instances.start,
         Self   = {};
 
     Self =
@@ -14,6 +15,15 @@ App.Game = function()
         {
             white: [ 'black_check', 'white_win' ],
             black: [ 'white_check', 'black_win' ]
+        },
+
+        onOpenDemo: function()
+        {
+            TStart.onOpenDemo( function()
+            {
+                TBoard.setMoves();
+                TBoard.setHelpers();
+            });
         },
 
         onDragStart: function()
@@ -79,4 +89,5 @@ App.Game = function()
     Self.onDragStart();
     Self.onDragStop();
     Self.onDrop();
+    Self.onOpenDemo();
 };

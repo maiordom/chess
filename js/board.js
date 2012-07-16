@@ -54,16 +54,23 @@ App.Board.prototype =
     init: function()
     {
         this.drawBoard();
-        this.drawCoords();
         this.setPieces();
         this.drawPieces();
-        this.appendRightColumn();
+    },
 
+    setMoves: function()
+    {
         this.setOnDragAndDrop();
         this.setOnDropSelectedPiece();
         this.setOnSelectPiece();
 
         this.reversePlayer( "white" );
+    },
+
+    setHelpers: function()
+    {
+        this.drawCoords();
+        this.appendRightColumn();
     },
 
     setNewQueen: function( x, y )
@@ -178,9 +185,9 @@ App.Board.prototype =
     {
         var board, container, wrapper, back, tr, i, j;
 
-        wrapper   = $( "<div>" ).addClass( "desk__wrapper" );
-        container = $( "<div>" ).addClass( "desk__container" );
-        board     = $( "<div>" ).addClass( "desk" );
+        board     = $( ".desk" );
+        wrapper   = $( ".desk__wrapper" );
+        container = $( ".desk__container" );
         back      = $( "<div>" ).addClass( "cell-background" );
 
         for ( i = 0; i < 8; i++ )
@@ -191,9 +198,9 @@ App.Board.prototype =
                 $( "<div class='cell'>" ).append( back.clone() ).appendTo( tr );
         }
 
-        this.table     = board.appendTo( wrapper );
-        this.wrapper   = wrapper.appendTo( container );
-        this.container = container.appendTo( "body" );
+        this.table     = board;
+        this.wrapper   = wrapper;
+        this.container = container;
     },
 
     drawCoords: function()
@@ -216,7 +223,7 @@ App.Board.prototype =
 
     appendRightColumn: function()
     {
-        var column = $( ".b-column_right" );
+        var column = $( ".b-column_right" ).show();
 
         this.tomb.white = column.find( ".b-tomb-white" );
         this.tomb.black = column.find( ".b-tomb-black" );
