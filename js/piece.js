@@ -8,6 +8,11 @@ App.Piece = function( name, color, cell )
     {
         this.draw( cell );
     }
+
+    if ( name === "king" )
+    {
+        this.available_castling = true;
+    }
 };
 
 App.Piece.prototype =

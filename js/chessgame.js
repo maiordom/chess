@@ -76,6 +76,11 @@ App.Game = function()
 
             TRules.deleteForbiddenMoves( coords[ 0 ], coords[ 1 ], TBoard.player, path );
 
+            if ( type === "king" )
+            {
+                Self.getCastlingPath( coords[ 0 ], coords[ 1 ], path );
+            }
+
             TBoard.setCellsAsAvailable( path );
 
             Self.curr_path = path;
@@ -83,6 +88,35 @@ App.Game = function()
             console.log( type + " :", { data: path } );
 
             return path;
+        },
+
+        getCastlingPath: function( x, y, path )
+        {
+            var result = TPath.isAvailableCastling( x, y );
+
+            if ( result.left_path.empty )
+            {
+                TRules.deleteForbiddenMoves( x, y, TBoard.player, result.left_path.path );
+
+                if ( result.left_path.path.length === 3 )
+                {
+                    path.push( App.Point( 1, y ) );
+
+                    console.log( "левый путь для рокировки доступен" );
+                }
+            }
+
+            if ( result.right_path.empty )
+            {
+                TRules.deleteForbiddenMoves( x, y, TBoard.player, result.right_path.path );
+
+                if ( result.right_path.path.length === 2 )
+                {
+                    path.push( App.Point( 6, y ) );
+
+                    console.log( "правый путь для рокировки доступен" );
+                }
+            }
         }
     };
 

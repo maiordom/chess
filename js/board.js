@@ -138,6 +138,11 @@ App.Board.prototype =
         this.cells[ from_y ][ from_x ].piece = null;
     },
 
+    removeCell: function( x, y )
+    {
+        this.cells[ y ][ x ].piece = null;
+    },
+
     drawPieces: function()
     {
         var a = this, c = this.cells;
