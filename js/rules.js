@@ -135,7 +135,6 @@ App.Rules = function( board, path )
                     {
                         if ( player !== color )
                         {
-                            console.log( "Опасность для " + player + " короля" );
                             return true;
                         }
                     }
@@ -157,7 +156,7 @@ App.Rules = function( board, path )
                 if ( cell.piece !== null )
                 {
                     if ( cell.piece.name  === "king" &&
-                        cell.piece.color === player )
+                         cell.piece.color === player )
                     {
                         return Self.isKingUnderAttack( i, j, player );
                     }

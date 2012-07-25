@@ -58,6 +58,7 @@ App.Game = function()
                     coords = from.concat( to );
 
                 TBoard.moveCell.apply( TBoard, coords );
+                TBoard.makeCastling.apply( TBoard, coords );
                 TBoard.setNotAvailableCastling.apply( TBoard, coords );
                 TBoard.setMovedPath.apply( TBoard, coords );
                 TRules.pawnChecking( coords[ 2 ], coords[ 3 ] );
