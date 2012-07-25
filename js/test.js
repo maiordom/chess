@@ -70,6 +70,30 @@ App.Test = function()
                 }
 
             }, 700 );
+        },
+
+        test4: function()
+        {
+            var
+                cells = App.Instances.board.cells,
+                piece;
+
+            for ( var y = 0, ylen = cells.length; y <  ylen; y++ )
+            for ( var x = 0, xlen = cells.length; x <  xlen; x++ )
+            {
+                piece = cells[ y ][ x ].piece;
+
+                if ( piece )
+                {
+                    if ( piece.name === "pawn"   ||
+                         piece.name === "bishop" ||
+                         piece.name === "knight" )
+                    {
+                        piece.obj.remove();
+                        App.Instances.board.removeCell( x, y );
+                    }
+                }
+            }
         }
     };
 

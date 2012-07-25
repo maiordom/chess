@@ -134,8 +134,24 @@ App.Board.prototype =
 
     moveCell: function( from_x, from_y, to_x, to_y )
     {
-        this.cells[ to_y ][ to_x ].piece     = this.cells[ from_y ][ from_x ].piece;
-        this.cells[ from_y ][ from_x ].piece = null;
+        var
+            to_cell   = this.cells[ to_y ][ to_x ],
+            from_cell = this.cells[ from_y ][ from_x ];
+
+        to_cell.piece   = from_cell.piece;
+        from_cell.piece = null;
+
+        return [ to_cell, from_cell ];
+    },
+
+    setNotAvailableCastling: function( from_x, from_y, to_x, to_y )
+    {
+        var piece = this.getCell( to_x, to_y ).piece;
+
+        if ( piece.name === "rook" || piece.name === "king" )
+        {
+            piece.available_castling = false;
+        }
     },
 
     removeCell: function( x, y )

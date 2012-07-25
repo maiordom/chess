@@ -9,7 +9,7 @@ App.Piece = function( name, color, cell )
         this.draw( cell );
     }
 
-    if ( name === "king" )
+    if ( name === "king" || name === "rook" )
     {
         this.available_castling = true;
     }

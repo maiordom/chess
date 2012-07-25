@@ -11,10 +11,16 @@ App.Game = function()
     {
         curr_path: [],
 
-        messages:
+        white:
         {
-            white: [ 'black_check', 'white_win' ],
-            black: [ 'white_check', 'black_win' ]
+            danger:  false,
+            message: [ "black_check", "white_win" ]
+        },
+
+        black:
+        {
+            danger: false,
+            message: [ "white_check", "black_win" ]
         },
 
         onOpenDemo: function()
@@ -52,17 +58,32 @@ App.Game = function()
                     coords = from.concat( to );
 
                 TBoard.moveCell.apply( TBoard, coords );
+                TBoard.setNotAvailableCastling.apply( TBoard, coords );
                 TBoard.setMovedPath.apply( TBoard, coords );
                 TRules.pawnChecking( coords[ 2 ], coords[ 3 ] );
-
-                if ( TRules.isKingDanger( TBoard.player ) )
-                {
-                    alert( Self.messages[ TBoard.queue_players[ TBoard.player ] ][ TRules.isEnd( TBoard.player ) ] );
-                }
-
+                Self.checkKingDanger();
                 TBoard.movePieceToTomb( e.drop.find( ".piece" ) );
+                
                 e.drop.append( e.drag.css( { top: "", left: "" } ) );
             });
+        },
+
+        checkKingDanger: function()
+        {
+            if ( TRules.isKingDanger( TBoard.player ) )
+            {
+                var
+                    player = TBoard.queue_players[ TBoard.player ],
+                    type   = TRules.isEnd( TBoard.player );
+
+                alert( Self[ player ].message[ type ] );
+
+                Self[ TBoard.player ].danger = true;
+            }
+            else
+            {
+                Self[ TBoard.player ].danger = false;
+            }
         },
 
         drawPiecePath: function( e )
@@ -76,7 +97,7 @@ App.Game = function()
 
             TRules.deleteForbiddenMoves( coords[ 0 ], coords[ 1 ], TBoard.player, path );
 
-            if ( type === "king" )
+            if ( type === "king" && !Self[ TBoard.player ].danger )
             {
                 Self.getCastlingPath( coords[ 0 ], coords[ 1 ], path );
             }
@@ -92,13 +113,13 @@ App.Game = function()
 
         getCastlingPath: function( x, y, path )
         {
-            var result = TPath.isAvailableCastling( x, y );
+            var o = TPath.isAvailableCastling( x, y );
 
-            if ( result.left_path.empty )
+            if ( o.left_path.empty && o.left_path.rook )
             {
-                TRules.deleteForbiddenMoves( x, y, TBoard.player, result.left_path.path );
+                TRules.deleteForbiddenMoves( x, y, TBoard.player, o.left_path.path );
 
-                if ( result.left_path.path.length === 3 )
+                if ( o.left_path.path.length === 3 )
                 {
                     path.push( App.Point( 1, y ) );
 
@@ -106,11 +127,11 @@ App.Game = function()
                 }
             }
 
-            if ( result.right_path.empty )
+            if ( o.right_path.empty && o.right_path.rook )
             {
-                TRules.deleteForbiddenMoves( x, y, TBoard.player, result.right_path.path );
+                TRules.deleteForbiddenMoves( x, y, TBoard.player, o.right_path.path );
 
-                if ( result.right_path.path.length === 2 )
+                if ( o.right_path.path.length === 2 )
                 {
                     path.push( App.Point( 6, y ) );
 

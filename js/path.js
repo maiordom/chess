@@ -130,24 +130,5 @@ App.Path.prototype =
         if ( this.tryPawnAttack.apply( this, right ) ) { path.push( App.Point.apply( null, right ) ); }
 
         return path;
-    },
-
-    getPathByType: function( x, y, type )
-    {
-        var path = [];
-
-        switch ( type )
-        {
-            case "pawn":   { path = this.pawnPath   ( x, y ); } break;
-            case "rook":   { path = this.rookPath   ( x, y ); } break;
-            case "knight": { path = this.knightPath ( x, y ); } break;
-            case "bishop": { path = this.bishopPath ( x, y ); } break;
-            case "queen":  { path = this.queenPath  ( x, y ); } break;
-            case "king":   { path = this.kingPath   ( x, y ); } break;
-        }
-
-        console.log( "Ходы " + type + " до отсечения: ", path );
-
-        return path;
     }
 };
