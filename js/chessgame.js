@@ -53,6 +53,8 @@ App.Game = function()
             TBoard.table.bind( "onDrop", function( e )
             {
                 var
+                    en_passant = false,
+
                     from   = TBoard.getCoordsByCell( e.drag ),
                     to     = TBoard.getCoordsByCell( e.drop, true ),
                     coords = from.concat( to );
@@ -61,29 +63,39 @@ App.Game = function()
                 TBoard.makeCastling.apply( TBoard, coords );
                 TBoard.setNotAvailableCastling.apply( TBoard, coords );
                 TBoard.setMovedPath.apply( TBoard, coords );
-                TRules.pawnChecking( coords[ 2 ], coords[ 3 ] );
+
+                en_passant = TPath.isEnPassant( to[ 0 ], to[ 1 ] );
+
+                en_passant ?
+                    TBoard.movePieceToTomb( en_passant ) :
+                    TBoard.movePieceToTomb( e.drop.find( ".piece" ) );
+
+                TRules.pawnChecking.apply( null, coords );
+
                 Self.checkKingDanger();
-                TBoard.movePieceToTomb( e.drop.find( ".piece" ) );
-                
+
                 e.drop.append( e.drag.css( { top: "", left: "" } ) );
             });
         },
 
         checkKingDanger: function()
         {
-            if ( TRules.isKingDanger( TBoard.player ) )
+            var
+                type = null,
+                curr_player = TBoard.player,
+                prev_player = TBoard.queue_players[ curr_player ];
+
+            if ( TRules.isKingDanger() )
             {
-                var
-                    player = TBoard.queue_players[ TBoard.player ],
-                    type   = TRules.isEnd( TBoard.player );
+                type = TRules.isEnd();
 
-                alert( Self[ player ].message[ type ] );
+                alert( Self[ prev_player ].message[ type ] );
 
-                Self[ TBoard.player ].danger = true;
+                Self[ curr_player ].danger = true;
             }
             else
             {
-                Self[ TBoard.player ].danger = false;
+                Self[ curr_player ].danger = false;
             }
         },
 
@@ -96,7 +108,7 @@ App.Game = function()
 
             path = TPath.getPathByType( coords[ 0 ], coords[ 1 ], type );
 
-            TRules.deleteForbiddenMoves( coords[ 0 ], coords[ 1 ], TBoard.player, path );
+            TRules.deleteForbiddenMoves( coords[ 0 ], coords[ 1 ], path );
 
             if ( type === "king" && !Self[ TBoard.player ].danger )
             {
@@ -118,7 +130,7 @@ App.Game = function()
 
             if ( o.left_path.empty && o.left_path.rook )
             {
-                TRules.deleteForbiddenMoves( x, y, TBoard.player, o.left_path.path );
+                TRules.deleteForbiddenMoves( x, y, o.left_path.path );
 
                 if ( o.left_path.path.length === 3 )
                 {
@@ -130,7 +142,7 @@ App.Game = function()
 
             if ( o.right_path.empty && o.right_path.rook )
             {
-                TRules.deleteForbiddenMoves( x, y, TBoard.player, o.right_path.path );
+                TRules.deleteForbiddenMoves( x, y, o.right_path.path );
 
                 if ( o.right_path.path.length === 2 )
                 {

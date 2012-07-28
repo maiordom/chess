@@ -7,24 +7,45 @@ App.Rules = function( board, path )
 
     Self =
     {
-        pawnChecking: function( to_x, to_y )
+        pawnChecking: function( from_x, from_y, to_x, to_y )
         {
             var
-                cell = TBoard.getCell( to_x, to_y ),
-                name = cell.piece.name;
+                cell   = TBoard.getCell( to_x, to_y ),
+                player = TBoard.player,
+                name   = cell.piece.name,
+                result = {};
+
+            result.new_queen  = false;
+            result.en_passant = false;
 
             if ( name === "pawn" )
             {
-                if ( to_y === ( TBoard.player === "black" ? 7 : 0 ) )
+                if ( to_y === ( player === "black" ? 7 : 0 ) )
                 {
                     TBoard.setNewQueen( to_x, to_y );
+
+                    result.new_queen = true;
+                }
+
+                if ( Math.abs( from_y - to_y ) === 2 )
+                {
+                    result.en_passant =
+                    {
+                        x:    to_x,
+                        y:    player === "white" ? to_y + 1 : to_y - 1,
+                        cell: cell
+                    };
                 }
             }
+
+            TPath.setEnPassant( result.en_passant );
+
+            return result;
         },
 
-        isEnd: function( player )
+        isEnd: function()
         {
-            var cell;
+            var player = TBoard.player, cell;
 
             for ( var i = 0; i < 8; i++ )
             for ( var j = 0; j < 8; j++ )
@@ -37,7 +58,7 @@ App.Rules = function( board, path )
                     {
                         Self.curr_path = TPath.getPathByType( i, j, cell.piece.name );
 
-                        Self.deleteForbiddenMoves( i, j, player, Self.curr_path );
+                        Self.deleteForbiddenMoves( i, j, Self.curr_path );
 
                         if ( Self.curr_path.length > 0 )
                         {
@@ -50,7 +71,7 @@ App.Rules = function( board, path )
             return 1;
         },
 
-        deleteForbiddenMoves : function( from_x, from_y, player, path )
+        deleteForbiddenMoves : function( from_x, from_y, path )
         {
             var to_x, to_y, i = 0;
 
@@ -59,7 +80,7 @@ App.Rules = function( board, path )
                 to_x = path[ i ].x;
                 to_y = path[ i ].y;
 
-                if ( Self.isForbidden( from_x, from_y, to_x, to_y, player ) )
+                if ( Self.isForbidden( from_x, from_y, to_x, to_y ) )
                 {
                     path.splice( i, 1 );
                 }
@@ -70,16 +91,16 @@ App.Rules = function( board, path )
             }
         },
 
-        isForbidden: function( from_x, from_y, to_x, to_y, player )
+        isForbidden: function( from_x, from_y, to_x, to_y )
         {
             var
-                is_check,
                 start = TBoard.getCell( from_x, from_y ).piece,
-                end   = TBoard.getCell( to_x, to_y ).piece;
+                end   = TBoard.getCell( to_x, to_y ).piece,
+                is_check;
 
             TBoard.moveCell( from_x, from_y, to_x, to_y );
 
-            is_check = Self.isKingDanger( player );
+            is_check = Self.isKingDanger();
 
             TBoard.setPiece( from_x, from_y, start );
             TBoard.setPiece( to_x, to_y, end );
@@ -88,12 +109,11 @@ App.Rules = function( board, path )
         },
 
 
-        isKingUnderAttack: function( x, y, player )
+        isKingUnderAttack: function( x, y, shift, player )
         {
-            var shift, path, xdiff, ydiff, piece, xi, yi, color;
+            var path, x_diff, y_diff, piece, xi, yi, color;
 
-            shift = player === "white" ? -1 : 1;
-            path  = [].concat( TPath.knightPath( x, y ), TPath.queenPath( x, y ) );
+            path = [].concat( TPath.knightPath( x, y ), TPath.queenPath( x, y ) );
 
             for ( var i = 0; i < path.length; i++ )
             {
@@ -102,25 +122,25 @@ App.Rules = function( board, path )
 
                 if ( TBoard.getCell( xi, yi ).piece )
                 {
-                    ydiff = Math.abs( y - yi ),
-                    xdiff = Math.abs( x - xi ),
-                    piece = TBoard.getCell( xi, yi ).piece.name;
-                    color = TBoard.getCell( xi, yi ).piece.color;
+                    y_diff = Math.abs( y - yi ),
+                    x_diff = Math.abs( x - xi ),
+                    piece  = TBoard.getCell( xi, yi ).piece.name;
+                    color  = TBoard.getCell( xi, yi ).piece.color;
 
                     if
                     (
-                        ( xdiff == 0 || ydiff == 0 ) &&
+                        ( x_diff == 0 || y_diff == 0 ) &&
                         (
-                            ( xdiff == 1 || ydiff == 1 ) &&
+                            ( x_diff == 1 || y_diff == 1 ) &&
                             ( piece == "king" )
                             ||
                             piece == "queen" || piece == "rook"
                         )
                         ||
-                        ( xdiff == ydiff ) &&
+                        ( x_diff == y_diff ) &&
                         (
                             (
-                                xdiff == 1 &&
+                                x_diff == 1 &&
                                 ( piece == "king" || piece == "pawn" && y - path[ i ].y == shift )
                             )
                             ||
@@ -129,7 +149,7 @@ App.Rules = function( board, path )
                         ||
                         (
                             piece == "knight" &&
-                            ( xdiff == 2 && ydiff == 1 || xdiff == 1 && ydiff == 2 )
+                            ( x_diff == 2 && y_diff == 1 || x_diff == 1 && y_diff == 2 )
                         )
                     )
                     {
@@ -144,9 +164,11 @@ App.Rules = function( board, path )
             return false;
         },
 
-        isKingDanger: function( player )
+        isKingDanger: function()
         {
-            var cell;
+            var
+                player = TBoard.player,
+                shift  = player === "white" ? -1 : 1, cell;
 
             for ( var i = 0; i < 8; i++ )
             for ( var j = 0; j < 8; j++ )
@@ -158,7 +180,7 @@ App.Rules = function( board, path )
                     if ( cell.piece.name  === "king" &&
                          cell.piece.color === player )
                     {
-                        return Self.isKingUnderAttack( i, j, player );
+                        return Self.isKingUnderAttack( i, j, shift, player );
                     }
                 }
             }

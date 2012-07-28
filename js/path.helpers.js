@@ -18,8 +18,17 @@ $.extend( App.Path.prototype,
     tryPawnAttack: function( x, y, color )
     {
         return this.inScope( x, y ) &&
-            this.getCell( x, y ).piece &&
-            this.getCell( x, y ).piece.color !== color;
+        (
+            (
+                this.getCell( x, y ).piece &&
+                this.getCell( x, y ).piece.color !== color
+            )
+            ||
+            (
+                this.en_passant.x === x &&
+                this.en_passant.y === y
+            )
+        );
     },
 
     isMoveCorrect: function( x, y, color )

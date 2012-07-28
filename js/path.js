@@ -5,6 +5,27 @@ App.Path = function( cells )
 
 App.Path.prototype = 
 {
+    en_passant: false,
+
+    setEnPassant: function( en_passant )
+    {
+        this.en_passant = en_passant;
+    },
+
+    isEnPassant: function( to_x, to_y )
+    {
+        if ( this.en_passant )
+        {
+            if ( this.en_passant.x === to_x &&
+                 this.en_passant.y === to_y )
+            {
+                return this.en_passant.cell.piece.obj;
+            }
+        }
+
+        return false;
+    },
+
     getLine: function( x, y, xShift, yShift, path )
     {
         var color = this.getCell( x, y ).piece.color;
