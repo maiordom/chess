@@ -1,5 +1,4 @@
-App.Game = function()
-{
+App.Game = function() {
     var
         TPath  = App.Instances.path,
         TBoard = App.Instances.board,
@@ -7,51 +6,40 @@ App.Game = function()
         TStart = App.Instances.start,
         Self   = {};
 
-    Self =
-    {
+    Self = {
         curr_path: [],
 
-        white:
-        {
+        white: {
             danger:  false,
             message: [ "black_check", "white_win" ]
         },
 
-        black:
-        {
+        black: {
             danger: false,
             message: [ "white_check", "black_win" ]
         },
 
-        onOpenDemo: function()
-        {
-            TStart.onOpenDemo( function()
-            {
+        onOpenDemo: function() {
+            TStart.onOpenDemo( function() {
                 TBoard.setMoves();
                 TBoard.setHelpers();
             });
         },
 
-        onDragStart: function()
-        {
-            TBoard.table.bind( "onDragStart", function( e )
-            {
+        onDragStart: function() {
+            TBoard.table.bind( "onDragStart", function( e ) {
                 Self.drawPiecePath( e );
             });
         },
 
-        onDragStop: function()
-        {
-            TBoard.table.bind( "onDragStop", function()
-            {
+        onDragStop: function() {
+            TBoard.table.bind( "onDragStop", function() {
                 TBoard.setCellsAsDefault( Self.curr_path );
             });
         },
 
-        onDrop: function()
-        {
-            TBoard.table.bind( "onDrop", function( e )
-            {
+        onDrop: function() {
+            TBoard.table.bind( "onDrop", function( e ) {
                 var
                     en_passant = false,
 
@@ -78,29 +66,25 @@ App.Game = function()
             });
         },
 
-        checkKingDanger: function()
-        {
+        checkKingDanger: function() {
             var
                 type = null,
                 curr_player = TBoard.player,
                 prev_player = TBoard.queue_players[ curr_player ];
 
-            if ( TRules.isKingDanger() )
-            {
+            if ( TRules.isKingDanger() ) {
                 type = TRules.isEnd();
 
                 alert( Self[ prev_player ].message[ type ] );
 
                 Self[ curr_player ].danger = true;
             }
-            else
-            {
+            else {
                 Self[ curr_player ].danger = false;
             }
         },
 
-        drawPiecePath: function( e )
-        {
+        drawPiecePath: function( e ) {
             var
                 path   = [],
                 type   = e.obj.attr( "data-type" ),
@@ -110,8 +94,7 @@ App.Game = function()
 
             TRules.deleteForbiddenMoves( coords[ 0 ], coords[ 1 ], path );
 
-            if ( type === "king" && !Self[ TBoard.player ].danger )
-            {
+            if ( type === "king" && !Self[ TBoard.player ].danger ) {
                 Self.getCastlingPath( coords[ 0 ], coords[ 1 ], path );
             }
 
@@ -124,28 +107,23 @@ App.Game = function()
             return path;
         },
 
-        getCastlingPath: function( x, y, path )
-        {
+        getCastlingPath: function( x, y, path ) {
             var o = TPath.isAvailableCastling( x, y );
 
-            if ( o.left_path.empty && o.left_path.rook )
-            {
+            if ( o.left_path.empty && o.left_path.rook ) {
                 TRules.deleteForbiddenMoves( x, y, o.left_path.path );
 
-                if ( o.left_path.path.length === 3 )
-                {
+                if ( o.left_path.path.length === 3 ) {
                     path.push( App.Point( 1, y ) );
 
                     console.log( "левый путь для рокировки доступен" );
                 }
             }
 
-            if ( o.right_path.empty && o.right_path.rook )
-            {
+            if ( o.right_path.empty && o.right_path.rook ) {
                 TRules.deleteForbiddenMoves( x, y, o.right_path.path );
 
-                if ( o.right_path.path.length === 2 )
-                {
+                if ( o.right_path.path.length === 2 ) {
                     path.push( App.Point( 6, y ) );
 
                     console.log( "правый путь для рокировки доступен" );

@@ -1,5 +1,4 @@
-$( document ).ready( function()
-{
+$( document ).ready( function() {
     var
         board = new App.Board(),
         start = new App.Start(),
@@ -7,8 +6,7 @@ $( document ).ready( function()
         rules = App.Rules( board, path ),
         test  = App.Test();
 
-    App.Instances =
-    {
+    App.Instances = {
         board: board,
         path:  path,
         rules: rules,

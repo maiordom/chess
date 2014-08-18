@@ -1,7 +1,5 @@
-$.extend( App.Board.prototype,
-{
-    drawBoard: function()
-    {
+$.extend( App.Board.prototype, {
+    drawBoard: function() {
         var board, container, wrapper, back, tr, i, j;
 
         board     = $( ".desk" );
@@ -9,8 +7,7 @@ $.extend( App.Board.prototype,
         container = $( ".desk__container" );
         back      = $( "<div>" ).addClass( "cell-background" );
 
-        for ( i = 0; i < 8; i++ )
-        {
+        for ( i = 0; i < 8; i++ ) {
             tr = $( "<div>" ).appendTo( board ).addClass( "row" );
 
             for ( j = 0; j < 8; j++ )
@@ -22,16 +19,14 @@ $.extend( App.Board.prototype,
         this.container = container;
     },
 
-    drawCoords: function()
-    {
+    drawCoords: function() {
         var
             lrow  = $( "<div>" ).addClass( "row_letters" ),
             nrow  = $( "<div>" ).addClass( "row_numbers" ),
             lcell = $( "<div>" ).addClass( "cell-letter" ),
             ncell = $( "<div>" ).addClass( "cell-number" );
 
-        for ( var i = 0, len = this.letters.length; i < len; i++)
-        {
+        for ( var i = 0, len = this.letters.length; i < len; i++) {
             lrow.append( lcell.clone().text( this.letters[ i ] ) );
             nrow.append( ncell.clone().text( len - i ) );
         }
@@ -40,12 +35,10 @@ $.extend( App.Board.prototype,
         nrow.appendTo( this.table );
     },
 
-    drawPieces: function()
-    {
+    drawPieces: function() {
         var a = this, c = this.cells;
 
-        for ( var i = 0; i < 8; i++ )
-        {
+        for ( var i = 0; i < 8; i++ ) {
             c[ 1 ][ i ].piece = new App.Piece( a.pnames[ 8 ], a.colors[ 0 ], c[ 1 ][ i ].cell );
             c[ 0 ][ i ].piece = new App.Piece( a.pnames[ i ], a.colors[ 0 ], c[ 0 ][ i ].cell );
 
@@ -56,8 +49,7 @@ $.extend( App.Board.prototype,
         this.setCellsColor();
     },
 
-    appendRightColumn: function()
-    {
+    appendRightColumn: function() {
         var column = $( ".b-column_right" ).show();
 
         this.tomb.white = column.find( ".b-tomb-white" );
@@ -66,27 +58,22 @@ $.extend( App.Board.prototype,
         this.wrapper.append( column );
     },
 
-    setCellsColor: function()
-    {
+    setCellsColor: function() {
         this.table.find( ".row:even .cell:even, .row:odd .cell:odd" ).addClass( "cell-white" );
         this.table.find( ".row:even .cell:odd,  .row:odd .cell:even" ).addClass( "cell-black" );
     },
 
-    setCells: function()
-    {
+    setCells: function() {
         var tr = this.table.find( ".row" ), td, i, j;
 
-        for ( i = 8; i--; )
-        {
+        for ( i = 8; i--; ) {
             this.cells[ i ] = [];
 
-            for ( j = 0; j < 8; j++ )
-            {
+            for ( j = 0; j < 8; j++ ) {
                 td = tr.eq( i ).find( ".cell" );
                 td.eq( j ).attr( "data-coords", j + "-" + ( 7 - i ) );
 
-                this.cells[ i ][ j ] =
-                {
+                this.cells[ i ][ j ] = {
                     cell:  td.eq( j ),
                     piece: null
                 };
