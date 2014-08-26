@@ -39,3 +39,6 @@
 ----
 
 http://sati.16mb.com/chess/
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/maiordom/chess/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
